@@ -16,8 +16,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v4
-    - name: Install Git
-      run: sudo apt-get update && sudo apt-get install -y git
     - name: Azure Login
       uses: azure/login@v2.3.0
       with:
@@ -32,6 +30,7 @@ jobs:
       uses: Azure/cli@v2.0.0
       with:
         inlineScript:  |
+          sudo apt-get update && sudo apt-get install -y git
           chmod +x $GITHUB_WORKSPACE/utils/buildContainerTemplate.sh
           $GITHUB_WORKSPACE/utils/buildContainerTemplate.sh -f $SRC_FOLDER \
                                                            -g $GITHUB_WORKSPACE \
