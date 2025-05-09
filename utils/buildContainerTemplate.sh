@@ -9,6 +9,7 @@ while getopts "f:g:s:u:r:t:d:" option;
         r ) REPOSITORY=${OPTARG};;
         t ) TASKNAME=${OPTARG};;
         d ) DOCKER_FILE=${OPTARG};;
+        a ) AZURE_CREDENTIALS=${OPTARG};;
     esac
 done
 echo $SRC_FOLDER
@@ -27,7 +28,19 @@ set -euxo pipefail  # fail on error
 pushd $GITHUB_WORKSPACE/$SRC_FOLDER/$SOURCE_LOCATION
 imageTag=$(git log -n 1 --format="%H" -- ".")
 popd
-  
+
+# Parse JSON
+$creds = $AZURE_CREDENTIALS | ConvertFrom-Json
+
+# Azure CLI login using service principal
+az login --service-principal `
+  --username $creds.clientId `
+  --password $creds.clientSecret `
+  --tenant $creds.tenantId
+
+# Set the subscription (Azure best practice)
+az account set --subscription $creds.subscriptionId
+
 # If the image with the generated tag doesn't already exist, build it.
 if ! az acr repository show -n $AZ_ACR_NAME --image "$REPOSITORY:$imageTag" -o table; then
     echo No match found. Container will be built.
