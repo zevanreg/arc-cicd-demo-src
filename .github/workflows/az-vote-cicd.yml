@@ -30,7 +30,7 @@ jobs:
       uses: Azure/cli@v2.0.0
       with:
         inlineScript:  |
-          sudo apt-get update && sudo apt-get install -y git
+          apt-get update && apt-get install -y git
           chmod +x $GITHUB_WORKSPACE/utils/buildContainerTemplate.sh
           $GITHUB_WORKSPACE/utils/buildContainerTemplate.sh -f $SRC_FOLDER \
                                                            -g $GITHUB_WORKSPACE \
