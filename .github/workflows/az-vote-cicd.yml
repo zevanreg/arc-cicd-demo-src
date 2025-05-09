@@ -73,6 +73,8 @@ jobs:
   Deploy_to_Dev:
     name: "Deploy to Dev"
     runs-on: ubuntu-latest
+    env:
+      IMAGE_REPO_NAME: azvote      
     needs: Build_Push_Azure_Vote_App_Image
     environment: az-vote-app-dev
     steps:
