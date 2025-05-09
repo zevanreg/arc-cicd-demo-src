@@ -37,7 +37,7 @@ jobs:
                                                            -r $IMAGE_REPO_NAME/$IMAGE_NAME \
                                                            -t $TASKNAME \
                                                            -d $DOCKER_FILE \
-                                                           -a $AZURE_CREDENTIALS
+                                                           #-a $AZURE_CREDENTIALS
     - name: Create Backend Image Tags
       env:
         SOURCE_LOCATION: src/azure-vote-back
@@ -45,10 +45,7 @@ jobs:
         IMAGE_NAME: azure-vote-back
         TASKNAME: BACKEND_IMAGE
         AZ_ACR_NAME: ${{ secrets.AZ_ACR_NAME }}   
-      uses: Azure/cli@v2.0.0
-      with:
-        inlineScript:  |
-          tdnf install git -y
+      run: |
           chmod +x $GITHUB_WORKSPACE/utils/buildContainerTemplate.sh
           $GITHUB_WORKSPACE/utils/buildContainerTemplate.sh -f $SRC_FOLDER \
                                                            -g $GITHUB_WORKSPACE \
@@ -57,6 +54,7 @@ jobs:
                                                            -r $IMAGE_REPO_NAME/$IMAGE_NAME \
                                                            -t $TASKNAME \
                                                            -d $DOCKER_FILE
+                                                           #-a $AZURE_CREDENTIALS
     - name: Upload Image Tags
       uses: actions/upload-artifact@v4
       with:
