@@ -9,7 +9,7 @@ while getopts "f:g:s:u:r:t:d:" option;
         r ) REPOSITORY=${OPTARG};;
         t ) TASKNAME=${OPTARG};;
         d ) DOCKER_FILE=${OPTARG};;
-        a ) AZURE_CREDENTIALS=${OPTARG};;
+        #a ) AZURE_CREDENTIALS=${OPTARG};;
     esac
 done
 echo $SRC_FOLDER
@@ -29,20 +29,20 @@ pushd $GITHUB_WORKSPACE/$SRC_FOLDER/$SOURCE_LOCATION
 imageTag=$(git log -n 1 --format="%H" -- ".")
 popd
 
-# Parse JSON
-clientId=$(echo "$AZURE_CREDENTIALS" | jq -r .clientId)
-clientSecret=$(echo "$AZURE_CREDENTIALS" | jq -r .clientSecret)
-tenantId=$(echo "$AZURE_CREDENTIALS" | jq -r .tenantId)
-subscriptionId=$(echo "$AZURE_CREDENTIALS" | jq -r .subscriptionId)
+## Parse JSON
+#clientId=$(echo "$AZURE_CREDENTIALS" | jq -r .clientId)
+#clientSecret=$(echo "$AZURE_CREDENTIALS" | jq -r .clientSecret)
+#tenantId=$(echo "$AZURE_CREDENTIALS" | jq -r .tenantId)
+#subscriptionId=$(echo "$AZURE_CREDENTIALS" | jq -r .subscriptionId)
 
-# Azure CLI login using service principal
-az login --service-principal \
-  --username "$clientId" \
-  --password "$clientSecret" \
-  --tenant "$tenantId"
+## Azure CLI login using service principal
+#az login --service-principal \
+#  --username "$clientId" \
+#  --password "$clientSecret" \
+#  --tenant "$tenantId"
 
-# Set the subscription (Azure best practice)
-az account set --subscription "$subscriptionId"
+## Set the subscription (Azure best practice)
+#az account set --subscription "$subscriptionId"
 
 # If the image with the generated tag doesn't already exist, build it.
 if ! az acr repository show -n $AZ_ACR_NAME --image "$REPOSITORY:$imageTag" -o table; then
