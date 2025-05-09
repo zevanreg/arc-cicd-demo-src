@@ -30,7 +30,7 @@ jobs:
       uses: Azure/cli@v2.0.0
       with:
         inlineScript:  |
-          apt-get update && apt-get install -y git
+          tdnf install git -y
           chmod +x $GITHUB_WORKSPACE/utils/buildContainerTemplate.sh
           $GITHUB_WORKSPACE/utils/buildContainerTemplate.sh -f $SRC_FOLDER \
                                                            -g $GITHUB_WORKSPACE \
@@ -49,6 +49,7 @@ jobs:
       uses: Azure/cli@v2.0.0
       with:
         inlineScript:  |
+          tdnf install git -y
           chmod +x $GITHUB_WORKSPACE/utils/buildContainerTemplate.sh
           $GITHUB_WORKSPACE/utils/buildContainerTemplate.sh -f $SRC_FOLDER \
                                                            -g $GITHUB_WORKSPACE \
