@@ -28,6 +28,8 @@ jobs:
   Deploy_to_Stage:
       name: "Deploy to Stage"
       runs-on: ubuntu-latest
+      env:
+        IMAGE_REPO_NAME: azvote      
       needs: Test_Dev
       environment: az-vote-app-stage
       steps:
@@ -69,7 +71,7 @@ jobs:
           TARGET_NAMESPACE: ${{ secrets.TARGET_NAMESPACE }}
           VOTE_APP_TITLE: ${{ secrets.VOTE_APP_TITLE }}
           DEMO_APP_URL: ${{ secrets.DEMO_APP_URL }}
-          AZURE_VOTE_IMAGE_REPO: ${{ secrets.AZURE_VOTE_IMAGE_REPO }}
+          AZURE_VOTE_IMAGE_REPO: ${{ secrets.AZ_ACR_NAME }}.azurecr.io/${{ env.IMAGE_REPO_NAME }}
           SYSTEM_LABEL: ${{ secrets.SYSTEM_LABEL }}
       - name: Create PR
         run: |
