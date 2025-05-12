@@ -1,4 +1,4 @@
 title: "$VOTE_APP_TITLE"
-serviceType: ClusterIP
+serviceType: LoadBalancer
 imageRepo: $AZURE_VOTE_IMAGE_REPO
 demoAppUrl: "/"
