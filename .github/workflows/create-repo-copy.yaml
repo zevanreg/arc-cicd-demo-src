@@ -41,6 +41,7 @@ jobs:
 
         echo "TARGET_REPO=$OWNER/$REPO_NAME" >> $GITHUB_ENV
         echo "TARGET_GITOPS_REPO=$OWNER/$TARGET_GITOPS_REPO" >> $GITHUB_ENV
+        echo "target_repo=$OWNER/$REPO_NAME" >> $GITHUB_OUTPUT
 
     - name: Clone current repo into temp dir
       run: |
@@ -65,15 +66,6 @@ jobs:
         gh secret set PAT --body "$PAT" --repo "$TARGET_REPO"
         gh secret set VOTE_APP_TITLE --body "$VOTE_APP_TITLE" --repo "$TARGET_REPO"
         
-    - name: Create environment and set secret
-      run: |
-        gh api --method PUT "/repos/$TARGET_REPO/environments/az-vote-app-dev"
-        gh secret set ENVIRONMENT_NAME --env az-vote-app-dev --body "${{ secrets.ENVIRONMENT_NAME }}" --repo "$TARGET_REPO"
-        gh secret set TARGET_NAMESPACE --env az-vote-app-dev --body "${{ secrets.TARGET_NAMESPACE }}" --repo "$TARGET_REPO"
-        gh api --method PUT "/repos/$TARGET_REPO/environments/az-vote-app-stage"
-        gh secret set ENVIRONMENT_NAME --env az-vote-app-stage --body "${{ secrets.ENVIRONMENT_NAME }}" --repo "$TARGET_REPO"
-        gh secret set TARGET_NAMESPACE --env az-vote-app-stage --body "${{ secrets.TARGET_NAMESPACE }}" --repo "$TARGET_REPO"
-
     - name: Clone gitops repo into temp dir
       run: |
         git clone https://github.com/Azure/${GITOPS_REPO}.git temp-gitops-repo
@@ -84,3 +76,26 @@ jobs:
       run: |
         cd temp-gitops-repo
         gh repo create "$TARGET_GITOPS_REPO" --public --source=. --push
+
+  clone-and-configure-environments:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        env: [dev,stage]
+    env:
+      GH_TOKEN: ${{ secrets.ADMIN_PAT }}
+      ENVIRONMENT_NAME: ${{ secrets.ENVIRONMENT_NAME }}
+      TARGET_NAMESPACE:  ${{ secrets.TARGET_NAMESPACE }}
+
+    steps:
+    - name: Set TARGET_REPO
+      run: |
+        echo "Target repo is ${{ needs.clone-and-configure.outputs.target_repo }}"
+        echo "TARGET_REPO=${{ needs.clone-and-configure.outputs.target_repo }}" >> $GITHUB_ENV
+
+    - name: Create environment and set secret
+      run: |
+        gh api --method PUT "/repos/$TARGET_REPO/environments/az-vote-app-${{ matrix.env }}"
+        gh secret set ENVIRONMENT_NAME --env az-vote-app-dev --body "$ENVIRONMENT_NAME" --repo "$TARGET_REPO"
+        gh secret set TARGET_NAMESPACE --env az-vote-app-dev --body "$TARGET_NAMESPACE" --repo "$TARGET_REPO"
+
