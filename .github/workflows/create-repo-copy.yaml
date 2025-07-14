@@ -99,6 +99,6 @@ jobs:
     - name: Create environment and set secret
       run: |
         gh api --method PUT "/repos/$TARGET_REPO/environments/az-vote-app-${{ matrix.env }}"
-        gh secret set ENVIRONMENT_NAME --env az-vote-app-dev --body "$ENVIRONMENT_NAME" --repo "$TARGET_REPO"
-        gh secret set TARGET_NAMESPACE --env az-vote-app-dev --body "$TARGET_NAMESPACE" --repo "$TARGET_REPO"
+        gh secret set ENVIRONMENT_NAME --env "az-vote-app-${{ matrix.env }}" --body "$ENVIRONMENT_NAME" --repo "$TARGET_REPO"
+        gh secret set TARGET_NAMESPACE --env "az-vote-app-${{ matrix.env }}" --body "$TARGET_NAMESPACE" --repo "$TARGET_REPO"
 
