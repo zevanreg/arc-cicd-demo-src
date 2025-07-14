@@ -81,6 +81,7 @@ jobs:
 
   clone-and-configure-environments:
     runs-on: ubuntu-latest
+    needs: clone-and-configure
     strategy:
       matrix:
         env: [dev,stage]
