@@ -10,8 +10,8 @@ on:
 jobs:
   clone-and-configure:
     runs-on: ubuntu-latest
-    outputs:
-      TARGET_REPO: ${{ steps.set-name.outputs.TARGET_REPO }}
+    outputs:
+      TARGET_REPO: ${{ steps.set-name.outputs.TARGET_REPO }}
     env:
       GH_TOKEN: ${{ secrets.ADMIN_PAT }}
       GITOPS_REPO: "arc-cicd-demo-gitops"
