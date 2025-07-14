@@ -85,11 +85,12 @@ jobs:
     strategy:
       matrix:
         env: [dev,stage]
+    environment: az-vote-app-${{ matrix.env }}
     env:
       GH_TOKEN: ${{ secrets.ADMIN_PAT }}
       ENVIRONMENT_NAME: ${{ secrets.ENVIRONMENT_NAME }}
       TARGET_NAMESPACE:  ${{ secrets.TARGET_NAMESPACE }}
-
+    
     steps:
     - name: Set TARGET_REPO
       run: |
