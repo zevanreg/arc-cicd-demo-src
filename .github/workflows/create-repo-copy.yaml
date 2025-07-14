@@ -13,7 +13,16 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.ADMIN_PAT }}
       GITOPS_REPO: "arc-cicd-demo-gitops"
-
+      AKS_NAME: ${{ secrets.AKS_NAME }}
+      AKS_RESOURCE_GROUP: ${{ secrets.AKS_RESOURCE_GROUP }}
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      AZ_ACR_NAME: ${{ secrets.AZ_ACR_NAME }}
+      MANIFESTS_BRANCH: ${{ secrets.MANIFESTS_BRANCH }}
+      MANIFESTS_FOLDER: ${{ secrets.MANIFESTS_FOLDER }}
+      MANIFESTS_REPO: https://github.com/${TARGET_GITOPS_REPO}
+      PAT: ${{ secrets.PAT }}
+      VOTE_APP_TITLE: ${{ secrets.VOTE_APP_TITLE }}
+      
     steps:
     - name: Set dynamic repo name
       id: set-name
@@ -46,16 +55,16 @@ jobs:
 
     - name: Set secrets in new repo
       run: |
-        gh secret set AKS_NAME --body "${{ secrets.AKS_NAME }}" --repo "$TARGET_REPO"
-        gh secret set AKS_RESOURCE_GROUP --body "${{ secrets.AKS_RESOURCE_GROUP }}" --repo "$TARGET_REPO"
-        gh secret set AZURE_CREDENTIALS --body "${{ secrets.AZURE_CREDENTIALS }}" --repo "$TARGET_REPO"
-        gh secret set AZ_ACR_NAME --body "${{ secrets.AZ_ACR_NAME }}" --repo "$TARGET_REPO"
-        gh secret set MANIFESTS_BRANCH --body "${{ secrets.MANIFESTS_BRANCH }}" --repo "$TARGET_REPO"
-        gh secret set MANIFESTS_FOLDER --body "${{ secrets.MANIFESTS_FOLDER }}" --repo "$TARGET_REPO"
+        gh secret set AKS_NAME --body "$AKS_NAME" --repo "$TARGET_REPO"
+        gh secret set AKS_RESOURCE_GROUP --body "$AKS_RESOURCE_GROUP" --repo "$TARGET_REPO"
+        gh secret set AZURE_CREDENTIALS --body "$AZURE_CREDENTIALS" --repo "$TARGET_REPO"
+        gh secret set AZ_ACR_NAME --body "$AZ_ACR_NAME" --repo "$TARGET_REPO"
+        gh secret set MANIFESTS_BRANCH --body "$MANIFESTS_BRANCH" --repo "$TARGET_REPO"
+        gh secret set MANIFESTS_FOLDER --body "$MANIFESTS_FOLDER" --repo "$TARGET_REPO"
         gh secret set MANIFESTS_REPO --body "https://github.com/${TARGET_GITOPS_REPO}" --repo "$TARGET_REPO"
-        gh secret set PAT --body "${{ secrets.PAT }}" --repo "$TARGET_REPO"
-        gh secret set VOTE_APP_TITLE --body "${{ secrets.VOTE_APP_TITLE }}" --repo "$TARGET_REPO"
-
+        gh secret set PAT --body "$PAT" --repo "$TARGET_REPO"
+        gh secret set VOTE_APP_TITLE --body "$VOTE_APP_TITLE" --repo "$TARGET_REPO"
+        
     - name: Create environment and set secret
       run: |
         gh api --method PUT "/repos/$TARGET_REPO/environments/az-vote-app-dev"
