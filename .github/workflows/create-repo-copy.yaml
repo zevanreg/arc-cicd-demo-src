@@ -10,6 +10,8 @@ on:
 jobs:
   clone-and-configure:
     runs-on: ubuntu-latest
+    outputs:
+      TARGET_REPO: ${{ steps.set-name.outputs.TARGET_REPO }}
     env:
       GH_TOKEN: ${{ secrets.ADMIN_PAT }}
       GITOPS_REPO: "arc-cicd-demo-gitops"
@@ -41,7 +43,7 @@ jobs:
 
         echo "TARGET_REPO=$OWNER/$REPO_NAME" >> $GITHUB_ENV
         echo "TARGET_GITOPS_REPO=$OWNER/$TARGET_GITOPS_REPO" >> $GITHUB_ENV
-        echo "target_repo=$OWNER/$REPO_NAME" >> $GITHUB_OUTPUT
+        echo "TARGET_REPO=$OWNER/$REPO_NAME" >> $GITHUB_OUTPUT
 
     - name: Clone current repo into temp dir
       run: |
