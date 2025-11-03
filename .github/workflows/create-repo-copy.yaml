@@ -81,6 +81,8 @@ jobs:
 
     - name: Enable Actions for ${{ env.TARGET_REPO }}
       run: |
+        echo "Waiting 10 seconds before enabling Actions..."
+        sleep 10
         gh api -X PUT repos/"$TARGET_REPO/actions/permissions" -F "enabled=true"
 
     - name: Clone gitops repo into temp dir
