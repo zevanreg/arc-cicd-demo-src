@@ -51,10 +51,10 @@ jobs:
         cd temp-repo
         git remote remove origin
 
-    - name: Create new repo from temp dir
+    - name: Create new repo from temp dir with Actions disabled
       run: |
         cd temp-repo
-        gh repo create "$TARGET_REPO" --public --source=. --push
+        gh repo create "$TARGET_REPO" --public --disable-actions --source=. --push
 
     - name: Set secrets in new repo
       run: |
@@ -67,7 +67,11 @@ jobs:
         gh secret set MANIFESTS_REPO --body "https://github.com/${TARGET_GITOPS_REPO}" --repo "$TARGET_REPO"
         gh secret set PAT --body "$PAT" --repo "$TARGET_REPO"
         gh secret set VOTE_APP_TITLE --body "$VOTE_APP_TITLE" --repo "$TARGET_REPO"
-        
+
+    - name: Enable Actions for ${{ env.TARGET_REPO }}
+      run: |
+        gh api -X PATCH repos/"$TARGET_REPO" -f has_actions=true
+
     - name: Clone gitops repo into temp dir
       run: |
         git clone https://github.com/Azure/${GITOPS_REPO}.git temp-gitops-repo
@@ -102,4 +106,3 @@ jobs:
         gh api --method PUT "/repos/$TARGET_REPO/environments/az-vote-app-${{ matrix.env }}"
         gh secret set ENVIRONMENT_NAME --env "az-vote-app-${{ matrix.env }}" --body "$ENVIRONMENT_NAME" --repo "$TARGET_REPO"
         gh secret set TARGET_NAMESPACE --env "az-vote-app-${{ matrix.env }}" --body "$TARGET_NAMESPACE" --repo "$TARGET_REPO"
-
