@@ -62,6 +62,8 @@ jobs:
     - name: Add remote and push code
       run: |
         cd temp-repo
+        # Configure git to use GitHub CLI for authentication
+        gh auth setup-git
         git remote add origin https://github.com/$TARGET_REPO.git
         git push -u origin master
 
