@@ -57,7 +57,7 @@ jobs:
     
     - name: Disable Actions immediately
       run: |
-        gh api -X PATCH repos/"$TARGET_REPO" -f has_actions=false
+        gh api -X PUT repos/"$TARGET_REPO/actions/permissions" -F "enabled=false"
     
     - name: Add remote and push code
       run: |
@@ -81,7 +81,7 @@ jobs:
 
     - name: Enable Actions for ${{ env.TARGET_REPO }}
       run: |
-        gh api -X PATCH repos/"$TARGET_REPO" -f has_actions=true
+        gh api -X PUT repos/"$TARGET_REPO/actions/permissions" -F "enabled=true"
 
     - name: Clone gitops repo into temp dir
       run: |
