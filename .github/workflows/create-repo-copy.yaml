@@ -63,7 +63,7 @@ jobs:
       run: |
         cd temp-repo
         git remote add origin https://github.com/$TARGET_REPO.git
-        git push -u origin main
+        git push -u origin master
 
     - name: Set secrets in new repo
       run: |
