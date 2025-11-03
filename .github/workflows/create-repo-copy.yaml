@@ -51,10 +51,19 @@ jobs:
         cd temp-repo
         git remote remove origin
 
-    - name: Create new repo from temp dir with Actions disabled
+    - name: Create new repo without pushing code
+      run: |
+        gh repo create "$TARGET_REPO" --public
+    
+    - name: Disable Actions immediately
+      run: |
+        gh api -X PATCH repos/"$TARGET_REPO" -f has_actions=false
+    
+    - name: Add remote and push code
       run: |
         cd temp-repo
-        gh repo create "$TARGET_REPO" --public --disable-actions --source=. --push
+        git remote add origin https://github.com/$TARGET_REPO.git
+        git push -u origin main
 
     - name: Set secrets in new repo
       run: |
